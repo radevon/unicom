@@ -1,0 +1,415 @@
+﻿@model PumpDb.Marker
+
+@{
+    ViewBag.Title = "Подробная информация по объекту";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+
+@section Css
+{
+    <link rel="stylesheet" href="~/css/detail.css"/>
+
+}
+
+<script src='@Url.Content("~/js/moment-with-locales.min.js")'></script>
+
+
+
+@Html.Partial("topmenu")
+
+
+
+<div class="container" style="margin: 65px auto 30px" data-ng-app="unicom" data-ng-controller="UnicomController" data-ng-init="init('@Model.Identity')">
+    
+    <alert data-ng-show="isSowAlert()" cls="alarmDanger"><strong>Внимание!</strong> Сработал датчик превышения давления в контуре {{lastData().Alarm}}!</alert>
+    
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h2 class="text-primary text-center" style="margin-top: 5px">@Model.Address.ToString()</h2>
+            <span class="pull-right">данные обновлены: <span class="text-success">{{updatedTime.toLocaleString('ru-RU',{day:'numeric', month:'long', year:'numeric', hour:'numeric', minute:'numeric', second:'numeric', timeZone:'Europe/Minsk'})}}</span></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+            <div style="font-size: 18px; padding: 5px">
+                <span class="text-muted" >последние полученые показания от</span>
+                <span id="date_recv" class="text-primary" >{{lastData().RecvDate.toLocaleString('ru-RU',{day:'numeric', month:'long', year:'numeric', hour:'numeric', minute:'numeric', second:'numeric', timeZone:'Europe/Minsk'})}}</span>
+            </div>
+        </div>
+          
+            
+       
+    </div>
+    <div class="row well well_view">
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 col">
+            <div class="panel panel-info panelparam">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3 col-small">
+                            <i class="glyphicon glyphicon-italic imgicon"></i>
+                        </div>
+                        <div class="col-xs-9 col-small text-right">
+                            <span class="huge">{{lastData().Amperage1.toFixed(3)}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <span class="text-muted">Ток<sub>1</sub>, А</span>
+                    <div class="clearfix"></div>
+                </div>
+                        
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 col">
+            <div class="panel panel-info panelparam">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3 col-small">
+                            <i class="glyphicon glyphicon-italic imgicon"></i>
+                        </div>
+                        <div class="col-xs-9 col-small text-right">
+                            <span class="huge">{{lastData().Amperage2.toFixed(3)}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <span class="text-muted">Ток<sub>2</sub>, А</span>
+                    <div class="clearfix"></div>
+                </div>
+                        
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 col">
+            <div class="panel panel-info panelparam">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3 col-small">
+                            <i class="glyphicon glyphicon-italic imgicon"></i>
+                        </div>
+                        <div class="col-xs-9 col-small text-right">
+                            <span class="huge">{{lastData().Amperage3.toFixed(3)}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <span class="text-muted">Ток<sub>3</sub>, А</span>
+                    <div class="clearfix"></div>
+                </div>
+                        
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 col">
+            <div class="panel panel-warning panelparam">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3 col-small">
+                            <i class="glyphicon glyphicon-flash imgicon"></i>
+                        </div>
+                        <div class="col-xs-9 col-small text-right">
+                            <div class="huge">{{lastData().Voltage1.toFixed(1)}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <span class="text-muted">Напряжение<sub>1</sub>, В</span>
+                    
+                    <div class="clearfix"></div>
+                </div>
+                        
+            </div>
+        </div>
+        
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 col">
+            <div class="panel panel-warning panelparam">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3 col-small">
+                            <i class="glyphicon glyphicon-flash imgicon"></i>
+                        </div>
+                        <div class="col-xs-9 col-small text-right">
+                            <div class="huge">{{lastData().Voltage2.toFixed(1)}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <span class="text-muted">Напряжение<sub>2</sub>, В</span>
+                    
+                    <div class="clearfix"></div>
+                </div>
+                        
+            </div>
+        </div>
+        
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 col">
+            <div class="panel panel-warning panelparam">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3 col-small">
+                            <i class="glyphicon glyphicon-flash imgicon"></i>
+                        </div>
+                        <div class="col-xs-9 col-small text-right">
+                            <div class="huge">{{lastData().Voltage3.toFixed(1)}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <span class="text-muted">Напряжение<sub>3</sub>, В</span>
+                    
+                    <div class="clearfix"></div>
+                </div>
+                        
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 col-lg-offset-2 col-md-offset-2 col">
+            <div class="panel panel-success panelparam">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3 col-small">
+                            <i class="glyphicon glyphicon-dashboard imgicon"></i>
+                        </div>
+                        <div class="col-xs-9 col-small text-right">
+                            <div class="huge">{{lastData().TotalEnergy.toFixed(4)}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <span class="text-muted">Эл. энергия, кВтч</span>
+                    <div class="clearfix"></div>
+                </div>
+                        
+            </div>
+        </div>
+        
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 col">
+            <div class="panel panel-danger panelparam">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3 col-small">
+                            <i class="glyphicon glyphicon-signal imgicon"></i>
+                        </div>
+                        <div class="col-xs-9 col-small text-right">
+                            <div class="huge">{{lastData().CurrentElectricPower.toFixed(2)}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <span class="text-muted">Мощность, кВт</span>
+                    
+                    <div class="clearfix"></div>
+                </div>
+                        
+            </div>
+        </div>
+        
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 col">
+            <div class="panel panel-primary panelparam">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3 col-small">
+                            <i class="glyphicon glyphicon-tint imgicon"></i>
+                        </div>
+                        <div class="col-xs-9 col-small text-right">
+                            <div class="huge">{{lastData().TotalWaterRate.toFixed(2)}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <span class="text-muted">Расх. воды общ., м<sup>3</sup></span>
+                    <div class="clearfix"></div>
+                </div>
+                        
+            </div>
+        </div>
+        
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 col">
+            <div class="panel panel-primary panelparam">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3 col-small">
+                            <i class="glyphicon glyphicon-tint imgicon"></i>
+                        </div>
+                        <div class="col-xs-9 col-small text-right">
+                            <div class="huge">{{lastData().WaterEnergy.toFixed(3)}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <span class="text-muted">Уд расх энерг, кВтч/м<sup>3</sup></span>
+                    <div class="clearfix"></div>
+                </div>
+                        
+            </div>
+        </div>
+        
+        
+
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <blockquote class="errors" data-ng-show="lastData().Errors.length>0">
+                <p class="text-danger">{{lastData().Errors}}</p>
+            </blockquote>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
+            <div class="text-muted text-center"><h5>Рассчитанные параметры</h5></div>
+            
+            <table id="calculatedTable" class="table table-bordered">
+                <tr>
+                    <td title="Рассчитывается на основе потребления за последние 10 мин">Мгновенный расход воды, м<sup>3</sup>/ч</td>
+                    <td>{{WaterByHour().toFixed(4)}}</td>
+                </tr>
+            </table>
+            
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-xs-12 col-sm-12 text-center">
+            <div id="warning_msg" data-ng-show="loseDataTime()>60">
+    Внимание! С момента получения последних данных прошло больше минуты<br/> Вероятно последние значения не актуальны...
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-6 col-xs-6">
+            <h2 class="text-right text-muted" style="margin-top:0px">
+                График показаний
+            </h2>
+        </div>
+        <div class="col-lg-4 col-md-5 col-sm-6 col-xs-6">
+            <select data-ng-model="graphParam" class="form-control">
+                <option value="Amperage1" class="text-primary">Ток фаза 1</option>
+                <option value="Amperage2" class="text-primary">Ток фаза 2</option>
+                <option value="Amperage3" class="text-primary">Ток фаза 3</option>
+                <option value="Voltage1" class="text-warning">Напряжение фаза 1</option>
+                <option value="Voltage2" class="text-warning">Напряжение фаза 2</option>
+                <option value="Voltage3" class="text-warning">Напряжение фаза 3</option>
+                <option value="CurrentElectricPower" class="text-danger">Мощность</option>
+                <option value="WaterEnergy" class="text-success">Удельн. расх. элект.</option>
+            </select>
+        </div>
+            
+
+    </div>
+    
+    
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div>
+                <svg id="AmperageGraph" style="border:1px dashed gray"></svg>
+                
+            </div>
+
+        </div>
+      
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-10 col-md-9 col-sm-8 col-xs-8">
+            <h2 class="text-center text-muted">
+                Значения за последние 30 мин
+            </h2>
+            
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-4" >
+            <a class="btn btn-default btn-sm" style="margin-top: 15px; margin-bottom: 5px" href='@Url.Action("History", "History", new {id=Model.MarkerId})'><span class="glyphicon glyphicon-calendar"></span>&nbsp;История показаний</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            
+            <table class="table table-condensed table-striped">
+                <thead class="bg-primary">
+                    <tr>
+                        <th>
+                            Дата/время
+                        </th>
+                        <th>
+                            Энер Q, <span class="ed">кВтч</span>
+                        </th>
+                        <th>+/-</th>
+                        <th>
+                            Вода V, <span class="ed">м<sup>3</sup></span>
+                        </th>
+                        <th>+/-</th>
+                        <th>
+                            Ток I<sub>1</sub>, <span class="ed">А</span>
+                        </th>
+                        <th>
+                            Ток I<sub>2</sub>, <span class="ed">A</span>
+                        </th>
+                        <th>
+                            Ток I<sub>3</sub>, <span class="ed">А</span>
+                        </th>
+                        <th>
+                            Напр U<sub>1</sub>, <span class="ed">В</span>
+                        </th>
+                        <th>
+                            Напр U<sub>2</sub>, <span class="ed">В</span>
+                        </th>
+                        <th>
+                            Напр U<sub>3</sub>, <span class="ed">В</span>
+                        </th>
+                        <th>
+                            Мощн P, <span class="ed">кВт</span>
+                        </th>
+                        <th>
+                            Уд расх эл, <span class="ed">кВтч/м<sup>3</sup></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="elem in EWdata.data" data-ng-class="getClassRowError(elem.Errors)" title="Список ошибок счетчика: {{elem.Errors}}">
+                        <td class="text-success">{{ elem.RecvDate.toLocaleString('ru-RU',{day:'numeric', month:'numeric', year:'numeric', hour:'numeric', minute:'numeric', second:'numeric',timeZone:'Europe/Minsk'}) }}</td>
+                        <td>{{ elem.TotalEnergy.toFixed(4) }}</td>
+                        <td class="text-muted">{{ EWdata.data.length>$index+1?(elem.TotalEnergy-EWdata.data[$index+1].TotalEnergy).toFixed(4):null }}</td>
+                        <td>{{ elem.TotalWaterRate.toFixed(2) }}</td>
+                        <td class="text-muted">{{ EWdata.data.length>$index+1?(elem.TotalWaterRate-EWdata.data[$index+1].TotalWaterRate).toFixed(3):null }}</td>
+                        <td class="text-info">{{ elem.Amperage1.toFixed(3) }}</td>
+                        <td class="text-info">{{ elem.Amperage2.toFixed(3) }}</td>
+                        <td class="text-info">{{ elem.Amperage3.toFixed(3) }}</td>
+                        <td class="text-warning">{{ elem.Voltage1.toFixed(1) }}</td>
+                        <td class="text-warning">{{ elem.Voltage2.toFixed(1) }}</td>
+                        <td class="text-warning">{{ elem.Voltage3.toFixed(1) }}</td>
+                        <td class="text-danger">{{ elem.CurrentElectricPower.toFixed(3)  }}</td>
+                        <td>{{ elem.WaterEnergy.toFixed(3) }}</td>
+                    </tr>
+                </tbody>
+                <tfoot style="font-weight:bold">
+                    <tr>
+                        <td>{{intervalData().toFixed(2)}} мин</td>
+                        <td style="text-align: right">всего:</td>
+                        <td>{{EnergyRate().toFixed(3)}}</td>
+                        <td style="text-align: right">всего:</td>
+                        <td>{{WaterRate().toFixed(2)}}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+                
+        </div>
+    </div>
+    
+        
+</div>
+
+@section Scripts{
+    
+    <script type="text/javascript" src='@Url.Content("~/js/angular/angular.min.js")'></script>
+        <script type="text/javascript" src='@Url.Content("~/js/d3/d3.v3.min.js")'></script>
+
+    <script type="text/javascript" src='@Url.Content("~/js/angular/unicom/unicomVisual.js")'></script>
+    
+   
+  
+}

@@ -1,0 +1,151 @@
+﻿
+    .panel.panelparam {
+        margin-bottom: 5px;
+        font-size: 13px;
+    }
+
+    .panelparam  .imgicon {
+        font-size: 26px;
+    }
+
+    .panelparam .huge {
+        font-weight: bold;
+        font-size: 22px;
+        color: #000;
+        font-family: Times New Roman, serif;
+        
+    }
+
+    .well.well_view {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.well_view .col {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+
+    #date_recv {
+        border: 1px solid #e3e3e3;
+        padding: 4px;
+
+    }
+
+    blockquote.errors {
+        padding: 5px 10px;
+        border-left-color: #e9967a;
+        font-size: 15px;
+    }
+
+    .col-small {
+        padding: 0px 5px 0px 5px;
+    }
+
+
+    .ed {
+    font-weight: normal;
+    color: #ffd700;
+}
+    
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+
+
+    .line {
+      fill: none;
+      stroke: #8fbc8f; 
+      stroke-width: 1.2px;
+    }
+
+
+
+.dot {
+    fill: red;
+    -ms-opacity: 0.6;
+    opacity: 0.6;
+}
+
+.tick line{
+    opacity: 0.2;
+    stroke-width: 0.8px;
+    stroke-dasharray: 2 2;
+  }
+
+#warning_msg {
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid red;
+    color: #dc143c;
+    font-size: 16px;
+    line-height: 1.1;
+    display: inline-block;
+    z-index: 4000;
+    text-align: center;
+    -ms-text-shadow: #90ee90 1px 0px 6px;
+    text-shadow: #90ee90 1px 0px 6px;
+    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.alert_{
+    position:fixed;
+    bottom:0px;
+    left:0px;
+    padding:3px;
+    margin:1px;
+    background-color:white;
+    color:black;
+    font-size:18px;
+    text-align:center;
+    z-index:21;
+
+    
+}
+
+@-webkit-keyframes blink { 
+	0% { background-color: #e22923;}
+	50% { background-color: #fff; }
+	100% { background-color: #e22923; }
+}
+
+@keyframes blink {  
+	0% { background-color: #e22923;}
+	50% { background-color: #fff; }
+	100% { background-color: #e22923; }
+}
+
+.alert_.alarmDanger{
+    background-color:#e22923;
+    color:white;
+
+    -webkit-animation: blink 2s linear infinite; 
+	animation: blink 2s linear infinite; 
+}
+
+#calculatedTable {
+    font-size: 16px;
+    font-family: monospace;
+}
+
+#calculatedTable tr td:last-child {
+    font-size: 22px;
+    font-weight: bold;
+    background-color: #f0e68c;
+}
+
+    @media (max-width:640px) {
+    .panelparam .huge {
+        
+        font-size: 20px;
+        
+        
+    }
+}

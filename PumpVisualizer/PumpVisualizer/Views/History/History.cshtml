@@ -1,0 +1,156 @@
+﻿@using System.Net.Http.Formatting
+@model PumpDb.Marker
+@{
+    ViewBag.Title = "История показаний";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+@section Css
+{
+    <link rel="stylesheet" type="text/css" href="~/css/jquery.datetimepicker.css" />
+   
+}
+
+<script src='@Url.Content("~/js/moment-with-locales.min.js")'></script>
+
+@Html.Partial("topmenu")
+
+<div id="archContainer" class="container-fluid" style="margin-top: 65px" data-ng-app="unicom" data-ng-controller="UnicomController">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <h2 class="text-center text-muted" style="margin-top: 5px">Данные из архива показаний</h2>
+            <h2 class="text-primary text-center" style="margin-top: 5px">
+                @Html.ActionLink(Model.Address,"ViewParameters","Details",new {id=Model.MarkerId},new {title="Нажмите для перехода к просмотру параметров в реальном времени"})
+            </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12  col-sm-12   col-xs-12 text-center">
+            <input type="text" id="datetimepicker" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <table class="table table-condensed table-striped">
+                <thead class="bg-primary">
+                    <tr>
+                        <th>
+                            Дата/время
+                        </th>
+                        <th>
+                            Энер Q, <span class="ed">кВтч</span>
+                        </th>
+                        <th>+/-</th>
+                        <th>
+                            Вода V, <span class="ed">м<sup>3</sup></span>
+                        </th>
+                        <th>+/-</th>
+                        <th>
+                            Ток I<sub>1</sub>, <span class="ed">А</span>
+                        </th>
+                        <th>
+                            Ток I<sub>2</sub>, <span class="ed">A</span>
+                        </th>
+                        <th>
+                            Ток I<sub>3</sub>, <span class="ed">А</span>
+                        </th>
+                        <th>
+                            Напр U<sub>1</sub>, <span class="ed">В</span>
+                        </th>
+                        <th>
+                            Напр U<sub>2</sub>, <span class="ed">В</span>
+                        </th>
+                        <th>
+                            Напр U<sub>3</sub>, <span class="ed">В</span>
+                        </th>
+                        <th>
+                            Мощн P, <span class="ed">кВт</span>
+                        </th>
+                        <th>
+                            Уд расх эл, <span class="ed">кВтч/м<sup>3</sup></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="elem in EWdata.data" data-ng-class="getClassRowError(elem.Errors)" title="Список ошибок счетчика: {{elem.Errors}}">
+                        <td class="text-success">{{ elem.RecvDate.toLocaleString('ru-RU',{day:'numeric', month:'numeric', year:'numeric', hour:'numeric', minute:'numeric', second:'numeric',timeZone:'Europe/Minsk'}) }}</td>
+                        <td>{{ elem.TotalEnergy.toFixed(4) }}</td>
+                        <td class="text-muted">{{ $index>0?(elem.TotalEnergy-EWdata.data[$index-1].TotalEnergy).toFixed(4):null }}</td>
+                        <td>{{ elem.TotalWaterRate.toFixed(2) }}</td>
+                        <td class="text-muted">{{ $index>0?(elem.TotalWaterRate-EWdata.data[$index-1].TotalWaterRate).toFixed(3):null }}</td>
+                        <td class="text-info">{{ elem.Amperage1.toFixed(3) }}</td>
+                        <td class="text-info">{{ elem.Amperage2.toFixed(3) }}</td>
+                        <td class="text-info">{{ elem.Amperage3.toFixed(3) }}</td>
+                        <td class="text-warning">{{ elem.Voltage1.toFixed(1) }}</td>
+                        <td class="text-warning">{{ elem.Voltage2.toFixed(1) }}</td>
+                        <td class="text-warning">{{ elem.Voltage3.toFixed(1) }}</td>
+                        <td class="text-danger">{{ elem.CurrentElectricPower.toFixed(3)  }}</td>
+                        <td>{{ elem.WaterEnergy.toFixed(3) }}</td>
+                    </tr>
+                </tbody>
+                <tfoot style="font-weight:bold">
+                    <tr>
+                        <td>{{intervalData().toFixed(2)}} мин</td>
+                        <td style="text-align: right">всего:</td>
+                        <td>{{EnergyRate().toFixed(3)}}</td>
+                        <td style="text-align: right">всего:</td>
+                        <td>{{WaterRate().toFixed(3)}}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+                
+        </div>
+    </div>
+
+   
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript" src='@Url.Content("~/js/datescrollpicker/jquery.datetimepicker.full.min.js")'></script>
+    
+    
+    <script type="text/javascript" src='@Url.Content("~/js/angular/angular.min.js")'></script>
+    
+    <script type="text/javascript" src='@Url.Content("~/js/d3/d3.v3.min.js")'></script>
+
+    <script type="text/javascript" src='@Url.Content("~/js/angular/unicom/unicomArchive.js")'></script>
+    
+   
+  
+
+    <script type="text/javascript">
+        $(function () {
+            $.datetimepicker.setLocale('ru');
+
+            
+            function sendRequest(value) {
+                var start = value;
+                start.setMinutes(0, 0);
+                
+                angular.element(document.getElementById('archContainer')).scope().loadData('@Model.Identity', start);
+                
+            }
+
+            $('#datetimepicker').datetimepicker({
+                step: 60,
+                inline: true,
+                value: new Date(),
+                lang: 'ru',
+                maxDate: (new Date()).setHours(23),
+                onChangeDateTime: sendRequest,
+                dayOfWeekStart: 1
+
+            });
+
+            
+        });
+    </script>
+}
