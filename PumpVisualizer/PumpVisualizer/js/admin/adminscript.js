@@ -88,7 +88,23 @@ $(function() {
     );
 
 
-    
+    $("#DbOptimize").click(
+       function () {
+           showLoading(true);
+           $.get('././OptimizeDB', {},
+               function (data) {
+                   $("#AdminContainer").html(data);
+               })
+           .error(function (jqXHR, textStatus, errorThrown) {
+               $("#AdminContainer").html("<h4 class='text-danger'>Возникла ошибка! Подробные сведения можно помотреть в консоли браузера</h4>");
+               console.log(jqXHR.responseText);
+           }).complete(function () {
+               showLoading(false);
+           });
+       }
+   );
+
+
     
 
     $("#AdminPasswordChange").click(

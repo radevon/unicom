@@ -60,6 +60,14 @@ namespace PumpDb
             set { this.FilePath = value; }
         }
 
+        public string GetFilePath
+        {
+            get
+            {
+                return this.FilePath;
+            }
+        }
+
 
         // существует ли база данных
         public bool IsDataBaseExist()
@@ -125,6 +133,30 @@ namespace PumpDb
             }
 
         }
+
+        public MethodResult Vacuum()
+        {
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(this.GetDefaultConnectionString()))
+                {
+                    using (SQLiteCommand command = connection.CreateCommand())
+                    {
+                        connection.Open();
+                        command.CommandText = "vacuum;";
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                        return new MethodResult(true);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return new MethodResult(false, ex.Message + "\n" + ex.StackTrace);
+            }
+        }
+
 
 
 

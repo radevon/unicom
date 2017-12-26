@@ -335,6 +335,7 @@
     <Content Include="Views\Report\StatByDay.cshtml" />
     <Content Include="Views\Report\StatByMonth.cshtml" />
     <Content Include="Views\Report\ReportIndex.cshtml" />
+    <Content Include="Views\Admin\OptimizeDB.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\PumpDb\PumpDb\PumpDb.csproj">

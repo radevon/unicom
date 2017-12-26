@@ -130,6 +130,38 @@ namespace PumpDb
                 }
             }
 
+
+            /// <summary>
+            /// Удаление данных между 2 датами
+            /// </summary>
+            /// <param name="start">Начальная дата</param>
+            /// <param name="end">Конечная дата</param>
+            /// <returns>объект MethodResult - характеризующий успешность операции</returns>
+            public MethodResult DeleteAllByDate(DateTime start, DateTime end)
+            {
+                try
+                {
+                    using (SQLiteConnection connection = CreateSqlConnection())
+                    {
+                        using (SQLiteCommand command = new SQLiteCommand("delete from ElectricAndWaterParams where datetime(recvDate) between @start and @end;", connection))
+                        {
+                            command.Parameters.Add("@start", System.Data.DbType.DateTime).Value = start;
+                            command.Parameters.Add("@end", System.Data.DbType.DateTime).Value = end;
+                            connection.Open();
+                            command.ExecuteNonQuery();
+                            connection.Close();
+
+                        }
+                    }
+                    return new MethodResult(true);
+                }
+                catch (Exception ex)
+                {
+                    return new MethodResult(false, ex.Message + "\n" + ex.StackTrace);
+                }
+            }
+
+
             /// <summary>
             ///  Метод удаляет таблицу с результатами подсчетов
             /// </summary>

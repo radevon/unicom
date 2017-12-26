@@ -24,11 +24,14 @@ namespace PumpVisualizer.Controllers
         private LocalDbRepository repo;
         private VisualDataRepository repo_data;
         private Logger loger = new Logger();
+        private ExternalRepository repo_ext;
+
 
         public AdminController()
         {
             repo=new LocalDbRepository();
             repo_data = new VisualDataRepository(ConfigurationManager.AppSettings["dbPath"]);
+            repo_ext = new ExternalRepository(ConfigurationManager.AppSettings["dbPath"]);
 
             //Thread.CurrentThread.CurrentCulture.
         }
@@ -80,6 +83,47 @@ namespace PumpVisualizer.Controllers
             }
             return RedirectToAction("DbStatus");
         }
+
+        public ActionResult OptimizeDB()
+        {
+            return PartialView();
+        }
+
+        [HttpPost]
+        public ActionResult Vacuum()
+        {
+            Database db = new Database(ConfigurationManager.AppSettings["dbPath"]);
+            if (db.IsDataBaseExist())
+            {
+                MethodResult res = db.Vacuum();
+                if (res.isSuccess)
+                {
+                    return Content("<div class='text-success'>Выполнено успешно!</div>");
+                }
+                else
+                {
+                    return Content("<div class='text-danger'>Ошибки:</div> " + res.Message);
+                }
+            }
+            else
+                return Content("База данных не обнаружена " + db.GetFilePath);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteData(int monthAgo)
+        {
+            DateTime oldDate = DateTime.Now.AddMonths(-monthAgo);
+            MethodResult res = repo_ext.DeleteAllByDate(DateTime.Now.AddYears(-15), oldDate);
+            if (res.isSuccess)
+            {
+                return Content("<div class='text-success'>Выполнено успешно! Записи удалены старше " + oldDate.ToString() + "</div>");
+            }
+            else
+            {
+                return Content("<div class='text-danger'>Ошибки:</div> " + res.Message);
+            }
+        }
+
 
         public ActionResult CreateNewUser()
         {
