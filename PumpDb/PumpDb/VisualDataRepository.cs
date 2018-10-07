@@ -13,6 +13,7 @@ namespace PumpDb
     {
         private Database db_;
 
+        private string selectEVSql = @"select Id, Identity, TotalEnergy, Amperage1, Amperage2, Amperage3, Voltage1, Voltage2, Voltage3, CurrentElectricPower, TotalWaterRate, RecvDate, Errors, Alarm, Presure from ElectricAndWaterParams ";
 
         public VisualDataRepository(string filePath)
         {
@@ -114,7 +115,7 @@ namespace PumpDb
 
             using (IDbConnection conn = new SQLiteConnection(this.db_.GetDefaultConnectionString()))
             {
-                parameter = conn.QuerySingleOrDefault<ElectricAndWaterParams>("select Id, Identity, TotalEnergy, Amperage1, Amperage2, Amperage3, Voltage1, Voltage2, Voltage3, CurrentElectricPower, TotalWaterRate, RecvDate, Errors, Alarm from ElectricAndWaterParams where Id=@id_", new { id_ = id });
+                parameter = conn.QuerySingleOrDefault<ElectricAndWaterParams>(selectEVSql+" where Id=@id_", new { id_ = id });
             }
             return parameter;
         }
@@ -125,7 +126,7 @@ namespace PumpDb
 
             using (IDbConnection conn = new SQLiteConnection(this.db_.GetDefaultConnectionString()))
             {
-                parameters = conn.Query<ElectricAndWaterParams>("select Id, Identity, TotalEnergy, Amperage1, Amperage2, Amperage3, Voltage1, Voltage2, Voltage3, CurrentElectricPower, TotalWaterRate, RecvDate, Errors, Alarm from ElectricAndWaterParams where Identity=@identity_ and datetime(recvDate) between @start and @end;", new { identity_ = identity, start = from, end = to });
+                parameters = conn.Query<ElectricAndWaterParams>(selectEVSql+" where Identity=@identity_ and datetime(recvDate) between @start and @end;", new { identity_ = identity, start = from, end = to });
             }
             return parameters;
         }

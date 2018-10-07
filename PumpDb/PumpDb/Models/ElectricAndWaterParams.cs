@@ -43,6 +43,9 @@ namespace PumpDb
         // какой та там алярм
         public int? Alarm { get; set; }
 
+        // новый параметр давление
+        public double? Presure { get; set; }
+
         // Отношение расхода воды к электроэнергии
         public double WaterEnergy
         {

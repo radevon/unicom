@@ -61,15 +61,16 @@ namespace PumpDb
             /// <param name="currentElectricPower">Текущая мощность</param>
             /// <param name="totalWaterRate">Общий расход воды</param>
             /// <param name="errors">Список ошибок</param>
+            /// <param name="presure">Давление</param>
             /// <param name="alarmCode">Какой то там важный алярм</param>
             /// <returns>объект MethodResult - характеризующий успешность операции</returns>
-            public MethodResult InsertNewRow(DateTime recvDate, string identity, double totalEnergy, double amperage1, double amperage2, double amperage3, double voltage1, double voltage2, double voltage3, double currentElectricPower, double totalWaterRate, string errors, int alarmCode=0)
+            public MethodResult InsertNewRow(DateTime recvDate, string identity, double totalEnergy, double amperage1, double amperage2, double amperage3, double voltage1, double voltage2, double voltage3, double currentElectricPower, double totalWaterRate, string errors,  double? presure, int alarmCode=0)
             {
                 try
                 {
                     using (SQLiteConnection connection = CreateSqlConnection())
                     {
-                        using (SQLiteCommand command = new SQLiteCommand("insert into ElectricAndWaterParams (recvDate,Identity,TotalEnergy,Amperage1,Amperage2,Amperage3,Voltage1,Voltage2,Voltage3,CurrentElectricPower,TotalWaterRate, Errors, Alarm) values(@recvDate,@Identity,@TotalEnergy,@Amperage1,@Amperage2,@Amperage3,@Voltage1,@Voltage2,@Voltage3,@CurrentElectricPower,@TotalWaterRate,@Errors,@alarmCode)", connection))
+                        using (SQLiteCommand command = new SQLiteCommand("insert into ElectricAndWaterParams (recvDate,Identity,TotalEnergy,Amperage1,Amperage2,Amperage3,Voltage1,Voltage2,Voltage3,CurrentElectricPower,TotalWaterRate, Errors, Alarm, Presure) values(@recvDate,@Identity,@TotalEnergy,@Amperage1,@Amperage2,@Amperage3,@Voltage1,@Voltage2,@Voltage3,@CurrentElectricPower,@TotalWaterRate,@Errors,@alarmCode,@presure)", connection))
                         {
                             command.Parameters.Add("@recvDate", System.Data.DbType.DateTime).Value = recvDate;
                             command.Parameters.Add("@Identity", System.Data.DbType.String).Value = identity;
@@ -84,6 +85,7 @@ namespace PumpDb
                             command.Parameters.Add("@TotalWaterRate", System.Data.DbType.Double).Value = totalWaterRate;
                             command.Parameters.Add("@Errors", System.Data.DbType.String).Value = errors;
                             command.Parameters.Add("@alarmCode", System.Data.DbType.Int32).Value = alarmCode;
+                            command.Parameters.Add("@presure", System.Data.DbType.Int32).Value = presure;
 
                             connection.Open();
                             command.ExecuteNonQuery();

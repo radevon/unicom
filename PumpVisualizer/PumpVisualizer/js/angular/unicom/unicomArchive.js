@@ -67,7 +67,8 @@ unicom.controller('UnicomController', function UnicomController($scope, $interva
                         TotalWaterRate: e.TotalWaterRate,
                         WaterEnergy: e.WaterEnergy,
                         Errors: e.Errors,
-                        Alarm: e.Alarm
+                        Alarm: e.Alarm,
+                        Presure: e.Presure
                     });
                 });
                 

@@ -151,7 +151,8 @@ unicom.controller('UnicomController', function UnicomController($scope,$interval
                     TotalWaterRate: null,
                     WaterEnergy: null,
                     Errors: null,
-                    Alarm:null
+                    Alarm: null,
+                    Presure: null
             };
     }
     };
@@ -196,7 +197,8 @@ unicom.controller('UnicomController', function UnicomController($scope,$interval
                         TotalWaterRate: e.TotalWaterRate,
                         WaterEnergy: e.WaterEnergy,
                         Errors: e.Errors,
-                        Alarm:e.Alarm
+                        Alarm: e.Alarm,
+                        Presure:e.Presure
                     });
                 });
                     $scope.EWdata.dataGraph = [];

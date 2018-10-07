@@ -35,7 +35,8 @@ namespace PumpDb
 	'TotalWaterRate'	REAL NOT NULL DEFAULT 0,
 	'RecvDate'	TEXT NOT NULL,
 	'Errors'	TEXT,
-    'Alarm'     INTEGER
+    'Alarm'     INTEGER,
+    'Presure' real
 );";
 
       private string LogTable = @"CREATE TABLE if not exists 'loging' (
