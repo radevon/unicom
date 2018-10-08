@@ -66,7 +66,7 @@ unicom.controller('UnicomController', function UnicomController($scope,$interval
         dataGraph: []
     };
 
-    $scope.graphParam = 'Amperage1';
+    $scope.graphParam = 'Presure';
 
     $scope.updatedTime = null;
 

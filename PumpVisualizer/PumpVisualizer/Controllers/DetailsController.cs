@@ -71,8 +71,9 @@ namespace PumpVisualizer.Controllers
             jsonData.EndDate = end;
             IEnumerable<ElectricAndWaterParams> temp=data.OrderByDescending(x => x.RecvDate);
             jsonData.DataTable = temp.Where(x=>x.RecvDate>end.AddMinutes(-interval_table)).ToList();
-            PropertyInfo infoprop = (typeof(ElectricAndWaterParams)).GetProperty(parameterGraph); 
-            jsonData.DataGraph = temp.Select(x=>new DataForVisual(){RecvDate=x.RecvDate,Value=(double)infoprop.GetValue(x)}).ToList();
+            PropertyInfo infoprop = (typeof(ElectricAndWaterParams)).GetProperty(parameterGraph);
+
+            jsonData.DataGraph = temp.Select(x => new DataForVisual() { RecvDate = x.RecvDate, Value = infoprop.GetValue(x) == null ? 0 : (double)infoprop.GetValue(x) }).ToList();
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
