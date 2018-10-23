@@ -85,7 +85,7 @@ namespace PumpDb
                             command.Parameters.Add("@TotalWaterRate", System.Data.DbType.Double).Value = totalWaterRate;
                             command.Parameters.Add("@Errors", System.Data.DbType.String).Value = errors;
                             command.Parameters.Add("@alarmCode", System.Data.DbType.Int32).Value = alarmCode;
-                            command.Parameters.Add("@presure", System.Data.DbType.Int32).Value = presure;
+                            command.Parameters.Add("@presure", System.Data.DbType.Double).Value = presure;
 
                             connection.Open();
                             command.ExecuteNonQuery();
