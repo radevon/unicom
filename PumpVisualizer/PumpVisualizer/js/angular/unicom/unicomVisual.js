@@ -72,9 +72,11 @@ unicom.controller('UnicomController', function UnicomController($scope,$interval
 
     // рассчиываю расход воды часовой на основе данных за посл 20 мин
     $scope.WaterByHour = function () {
-        // интервал
-        var to_ = moment($scope.updatedTime);
-        var from_ = moment($scope.updatedTime).subtract(20, 'minutes');
+        if ($scope.EWdata.data.length == 0) {
+            return 0;
+        }
+        var to_ = moment($scope.EWdata.data[0].RecvDate);
+        var from_ = moment($scope.EWdata.data[0].RecvDate).subtract(20, 'minutes');
 
        // выбираю записи из интервала
         var dataCalculate = $scope.EWdata.data.filter(function (e,i) {
@@ -100,6 +102,41 @@ unicom.controller('UnicomController', function UnicomController($scope,$interval
         }
         
     };
+
+    // удельный расход электроэнергии на основе показаний эл и воды за посл 20 мин
+    $scope.YdelEnergy = function () {
+        if ($scope.EWdata.data.length == 0) {
+            return 0;
+        }
+        var to_ = moment($scope.EWdata.data[0].RecvDate);
+        var from_ = moment($scope.EWdata.data[0].RecvDate).subtract(20, 'minutes');
+
+        // выбираю записи из интервала
+        var dataCalculate = $scope.EWdata.data.filter(function (e, i) {
+            return e.RecvDate >= from_ && e.RecvDate <= to_ && e.TotalEnergy>0&&e.TotalWaterRate > 0;
+        });
+
+        var energ = 0;
+        var water = 0;
+        console.log(from_);
+        // если данных > чем 2 записи, то рассчитываю на основе первого и последнего значения из интервала
+        if (dataCalculate.length > 0) {
+            // разность показаний
+            energ = dataCalculate[0].TotalEnergy - dataCalculate[dataCalculate.length - 1].TotalEnergy;
+            // разность в секундах
+            water = dataCalculate[0].TotalWaterRate-dataCalculate[dataCalculate.length - 1].TotalWaterRate;
+
+            if (water != 0) {
+                return energ / water;
+            } else
+                return 0;
+            // нет данных за последние 20 мин
+        } else {
+            return 0;
+        }
+
+       
+    }
 
  
     // посчитаный расход воды по табличным данным
@@ -166,7 +203,7 @@ unicom.controller('UnicomController', function UnicomController($scope,$interval
         $scope.loadData(identity);
         
        
-        $interval(function () { $scope.loadData(identity); }, 10000);
+        $interval(function () { $scope.loadData(identity); }, 20000);
               
     };
 

@@ -223,14 +223,14 @@
         </div>
         
         <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 col">
-            <div class="panel panel-primary panelparam">
+            <div class="panel panel-primary panelparam" title="Удельный расход электроэнергии, рассчитывается на основе данных расхода электроэнергии и воды за последние 20 мин">
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xs-3 col-small">
                             <i class="glyphicon glyphicon-tint imgicon"></i>
                         </div>
                         <div class="col-xs-9 col-small text-right">
-                            <div class="huge">{{lastData().WaterEnergy.toFixed(3)}}</div>
+                            <div class="huge">{{YdelEnergy().toFixed(3)}}</div>
                         </div>
                     </div>
                 </div>
@@ -279,7 +279,7 @@
             
             <table id="calculatedTable" class="table table-bordered">
                 <tr>
-                    <td title="Рассчитывается на основе потребления за последние 10 мин">Мгновенный расход воды, м<sup>3</sup>/ч</td>
+                    <td title="Рассчитывается на основе потребления за последние 20 мин">Мгновенный расход воды, м<sup>3</sup>/ч</td>
                     <td>{{WaterByHour().toFixed(4)}}</td>
                 </tr>
             </table>
@@ -308,7 +308,7 @@
                 <option value="Voltage2" class="text-warning">Напряжение фаза 2</option>
                 <option value="Voltage3" class="text-warning">Напряжение фаза 3</option>
                 <option value="CurrentElectricPower" class="text-danger">Мощность</option>
-                <option value="WaterEnergy" class="text-success">Удельн. расх. элект.</option>
+                
                 <option value="Presure" class="text-primary">Давление</option>
             </select>
         </div>
@@ -397,7 +397,7 @@
                         <td class="text-warning">{{ elem.Voltage2.toFixed(1) }}</td>
                         <td class="text-warning">{{ elem.Voltage3.toFixed(1) }}</td>
                         <td class="text-danger">{{ elem.CurrentElectricPower.toFixed(3)  }}</td>
-                        <td>{{ elem.WaterEnergy.toFixed(3) }}</td>
+                        <td>{{ YdelEnergy().toFixed(3) }}</td>
                         <td>{{ elem.Presure==null?null:elem.Presure.toFixed(2) }}</td>
                     </tr>
                 </tbody>
