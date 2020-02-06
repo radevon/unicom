@@ -67,6 +67,7 @@
     <Compile Include="Models\LogRecord.cs" />
     <Compile Include="Models\Marker.cs" />
     <Compile Include="Models\ElectricAndWaterParams.cs" />
+    <Compile Include="Models\SummaryData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilite.cs" />
     <Compile Include="VisualDataRepository.cs" />

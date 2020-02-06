@@ -15,7 +15,7 @@
 <div id="app" data-ng-app="app" data-ng-init="init()" data-ng-controller="MarkerController">
     <div id="mapcontainer">
         
-            <table class="table table-hover standartFont" style="background-color: #fff">
+            <table class="table table-condensed table-hover standartFont" style="background-color: #fff">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -168,7 +168,9 @@
             </div>
         </div>
         <!-- конец форма добавления -->
-
+        <div class="col-md-12">
+            @Html.ActionLink("Посмотреть послед. показания по всем объектам", "GetSummaryData", "Report", null, new { @class="btn btn-default", style="width:100%"})
+        </div>
     </div>
 
       

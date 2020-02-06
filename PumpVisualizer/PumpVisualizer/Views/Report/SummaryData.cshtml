@@ -1,0 +1,69 @@
+﻿@model IEnumerable<PumpDb.SummaryData>
+
+@{
+    ViewBag.Title = "Последние полученые данные по каждому объекту";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+
+@Html.Partial("topmenu")
+
+<style>
+    body{
+        background-color:#eeeeee;
+    }
+</style>
+
+<div class="container" style="margin: 65px auto 5px">
+    <h2 class="text-primary">Последние полученые данные по объектам по состоянию на <span class="text-muted">@DateTime.Now.ToString("dd MMM yyyy HH:mm:ss")</span></h2>
+
+    
+    <table class="table table-bordered table-condensed" style="font-size: 15px; background-color: #fff; font-family:monospace">
+        <tr>
+            <th class="text-center">
+                ИД
+            </th>
+            <th class="text-center">
+                Наименование
+            </th>
+            <th class="text-center">
+                Дата показаний
+            </th>
+            <th class="text-center">
+                Знач. эл. энергии, кВтч
+            </th>
+            <th class="text-center">
+                Знач. общ. расх. воды, м3
+            </th>
+            <th class="text-center">
+                Знач. давления, бар
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.MarkerId
+                </td>
+                <td>
+                    @Html.ActionLink(item.Address, "ViewParameters", "Details", new { id=item.MarkerId},null)
+                </td>
+                <td class="text-right">
+                    @(item.RecvDate.HasValue ? item.RecvDate.Value.ToString("dd MMM yyyy HH:mm:ss") : "")
+                </td>
+                <td class="text-right">
+                    @(item.TotalEnergy.HasValue ? item.TotalEnergy.Value.ToString("f3") : "")
+                </td>
+                <td class="text-right">
+                    @(item.TotalWaterRate.HasValue ? item.TotalWaterRate.Value.ToString("f3") : "")
+                </td>
+                <td class="text-right">
+                    @(item.Presure.HasValue ? item.Presure.Value.ToString("f3") : "")
+                </td>
+            </tr>
+        }
+
+    </table>
+
+</div>
+

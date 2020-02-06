@@ -69,5 +69,12 @@ namespace PumpVisualizer.Controllers
             
         }
 
+
+        public ActionResult GetSummaryData()
+        {
+            List<SummaryData> dataLast = repo_.LastDataByObjects().ToList();
+            return View("SummaryData", dataLast);
+        }
+
     }
 }

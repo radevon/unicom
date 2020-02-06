@@ -42,12 +42,11 @@ namespace PumpVisualizer.Controllers
         public JsonResult GetDataBySmallPeriod(string identity, string parameterGraph)
         {
             DateTime end = DateTime.Now;
-            double interval = 1; // 1 час для построения графика
-            int interval_table = 30;  // 30 мин для данных
+            double interval = 24; // сутки
+            
             try
             {
                 interval = Convert.ToDouble(ConfigurationManager.AppSettings["DataVisualInterval"], CultureInfo.GetCultureInfo("en-US").NumberFormat);
-                interval_table = Convert.ToInt32(ConfigurationManager.AppSettings["DataTableInterval"], CultureInfo.GetCultureInfo("en-US").NumberFormat);
             }
             catch (Exception ex)
             {
@@ -60,17 +59,18 @@ namespace PumpVisualizer.Controllers
 
                 loger.LogToFile(message);
                 loger.LogToDatabase(message);
-                interval = 1;
-                interval_table = 30;
+                
             }
             
             DateTime start = end.AddHours(-interval);
             IEnumerable<ElectricAndWaterParams> data = repo_.GetPumpParamsByIdentityAndDate(identity, start, end);
+            ElectricAndWaterParams last = repo_.GetLastPumpParamsByIdentity(identity);
             EWdata jsonData = new EWdata();
             jsonData.StartDate = start;
             jsonData.EndDate = end;
             IEnumerable<ElectricAndWaterParams> temp=data.OrderByDescending(x => x.RecvDate);
-            jsonData.DataTable = temp.Where(x=>x.RecvDate>end.AddMinutes(-interval_table)).ToList();
+            jsonData.DataTable = temp.ToList();
+            jsonData.Last = last;
             PropertyInfo infoprop = (typeof(ElectricAndWaterParams)).GetProperty(parameterGraph);
 
             jsonData.DataGraph = temp.Select(x => new DataForVisual() { RecvDate = x.RecvDate, Value = infoprop.GetValue(x) == null ? 0 : (double)infoprop.GetValue(x) }).ToList();

@@ -131,6 +131,17 @@ namespace PumpDb
             return parameters;
         }
 
+        public ElectricAndWaterParams GetLastPumpParamsByIdentity(string identity)
+        {
+            ElectricAndWaterParams parameters = null;
+
+            using (IDbConnection conn = new SQLiteConnection(this.db_.GetDefaultConnectionString()))
+            {
+                parameters = conn.QuerySingleOrDefault<ElectricAndWaterParams>(selectEVSql + " where Identity=@identity_ order by recvDate desc limit 1;", new { identity_ = identity });
+            }
+            return parameters;
+        }
+
         #endregion
 
         #region Statistic
@@ -180,6 +191,19 @@ left join
             using (IDbConnection conn = new SQLiteConnection(this.db_.GetDefaultConnectionString()))
             {
                 parameters = conn.Query<ByHourStat>(sqlstring, new { identity_ = identity, day_ = startMonth.ToString("yyyy-MM-dd") });
+            }
+            return parameters;
+        }
+
+
+        public IEnumerable<SummaryData> LastDataByObjects()
+        {
+            IEnumerable<SummaryData> parameters = Enumerable.Empty<SummaryData>();
+
+            string sqlstring = @"select o.MarkerId, o.Address, o.Identity, e.RecvDate,e.TotalEnergy, e.TotalWaterRate, e.Presure from db_object_marker o left join electricAndWaterParams e on o.Identity=e.Identity join (select p.identity, max(p.recvdate) as max_date from electricAndWaterParams p group by p.identity) data on e.Identity=data.Identity and e.RecvDate=data.max_date";
+            using (IDbConnection conn = new SQLiteConnection(this.db_.GetDefaultConnectionString()))
+            {
+                parameters = conn.Query<SummaryData>(sqlstring);
             }
             return parameters;
         }

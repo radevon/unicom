@@ -15,10 +15,13 @@ namespace PumpVisualizer
 
         public List<DataForVisual> DataGraph { get; set; }
 
+        public ElectricAndWaterParams Last { get; set; }
+
         public EWdata()
         {
             DataTable=new List<ElectricAndWaterParams>();
             DataGraph = new List<DataForVisual>();
+            Last = null;
         }
     }
 

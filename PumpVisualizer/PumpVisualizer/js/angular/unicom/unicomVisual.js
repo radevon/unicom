@@ -3,7 +3,7 @@
        width = 980,
        height = 300;
 
-    var parseDate = d3.time.format("%X").parse;
+    var parseDate = d3.time.format("%x").parse;
 
     var x = d3.time.scale()
         .range([0, width]);
@@ -14,8 +14,8 @@
     var xAxis = d3.svg.axis()
         .scale(x)
         .orient("bottom")
-        .ticks(d3.time.minute, 5)
-        .tickFormat(d3.time.format("%X"));
+        .ticks(d3.time.minute, 60)
+        .tickFormat(d3.time.format("%H:%M"));
         
 
     var yAxis = d3.svg.axis()
@@ -55,6 +55,26 @@
     y_axis.call(yAxis);
 
 
+    function getDefaultDataOblect() {
+        return {
+                
+            Id:null,
+            RecvDate: null,
+            TotalEnergy: null,
+            Amperage1: null,
+            Amperage2: null,
+            Amperage3: null,
+            Voltage1: null,
+            Voltage2: null,
+            Voltage3: null,
+            CurrentElectricPower: null,
+            TotalWaterRate: null,
+            WaterEnergy: null,
+            Errors: null,
+            Alarm: null,
+            Presure: null
+        };
+    }
 
 var unicom = angular.module("unicom", []);
 
@@ -63,7 +83,8 @@ unicom.controller('UnicomController', function UnicomController($scope,$interval
         startDate: new Date(),
         endDate: new Date(),
         data: [],
-        dataGraph: []
+        dataGraph: [],
+        last: getDefaultDataOblect()
     };
 
     $scope.graphParam = 'Presure';
@@ -76,7 +97,7 @@ unicom.controller('UnicomController', function UnicomController($scope,$interval
             return 0;
         }
         var to_ = moment($scope.EWdata.data[0].RecvDate);
-        var from_ = moment($scope.EWdata.data[0].RecvDate).subtract(20, 'minutes');
+        var from_ = moment($scope.EWdata.data[0].RecvDate).subtract(60, 'minutes');
 
        // выбираю записи из интервала
         var dataCalculate = $scope.EWdata.data.filter(function (e,i) {
@@ -96,20 +117,20 @@ unicom.controller('UnicomController', function UnicomController($scope,$interval
                 return substractValue * 60 * 60 / secondsInterval;
             } else
                 return 0;
-            // нет данных за последние 20 мин
+            // нет данных за последние 60 мин
         } else {
             return 0;
         }
         
     };
 
-    // удельный расход электроэнергии на основе показаний эл и воды за посл 20 мин
+    // удельный расход электроэнергии на основе показаний эл и воды за посл час мин
     $scope.YdelEnergy = function () {
         if ($scope.EWdata.data.length == 0) {
             return 0;
         }
         var to_ = moment($scope.EWdata.data[0].RecvDate);
-        var from_ = moment($scope.EWdata.data[0].RecvDate).subtract(20, 'minutes');
+        var from_ = moment($scope.EWdata.data[0].RecvDate).subtract(60, 'minutes');
 
         // выбираю записи из интервала
         var dataCalculate = $scope.EWdata.data.filter(function (e, i) {
@@ -118,7 +139,7 @@ unicom.controller('UnicomController', function UnicomController($scope,$interval
 
         var energ = 0;
         var water = 0;
-        console.log(from_);
+        //console.log(from_);
         // если данных > чем 2 записи, то рассчитываю на основе первого и последнего значения из интервала
         if (dataCalculate.length > 0) {
             // разность показаний
@@ -130,7 +151,7 @@ unicom.controller('UnicomController', function UnicomController($scope,$interval
                 return energ / water;
             } else
                 return 0;
-            // нет данных за последние 20 мин
+            // нет данных за последний час
         } else {
             return 0;
         }
@@ -170,28 +191,7 @@ unicom.controller('UnicomController', function UnicomController($scope,$interval
     
     // последние показания
     $scope.lastData = function() {
-        if ($scope.EWdata.data.length > 0) {
-        return $scope.EWdata.data[0];
-        } else {
-            return {
-                
-                    Id:null,
-                    RecvDate: null,
-                    TotalEnergy: null,
-                    Amperage1: null,
-                    Amperage2: null,
-                    Amperage3: null,
-                    Voltage1: null,
-                    Voltage2: null,
-                    Voltage3: null,
-                    CurrentElectricPower: null,
-                    TotalWaterRate: null,
-                    WaterEnergy: null,
-                    Errors: null,
-                    Alarm: null,
-                    Presure: null
-            };
-    }
+        return $scope.EWdata.last;
     };
 
     // время, прошедшее после получения последних данных (сек)
@@ -203,7 +203,7 @@ unicom.controller('UnicomController', function UnicomController($scope,$interval
         $scope.loadData(identity);
         
        
-        $interval(function () { $scope.loadData(identity); }, 20000);
+        $interval(function () { $scope.loadData(identity); }, 10*1000*60);
               
     };
 
@@ -246,7 +246,30 @@ unicom.controller('UnicomController', function UnicomController($scope,$interval
                         });
                         });
                    
-
+                    // последние имеющиеся данные по объекту
+                    if (data.Last != null) {
+                        $scope.EWdata.last =
+                            {
+                                Id: data.Last.Id,
+                                RecvDate: new Date(parseInt(data.Last.RecvDate.substr(6))),
+                                TotalEnergy: data.Last.TotalEnergy,
+                                Amperage1: data.Last.Amperage1,
+                                Amperage2: data.Last.Amperage2,
+                            Amperage3: data.Last.Amperage3,
+                            Voltage1: data.Last.Voltage1,
+                            Voltage2: data.Last.Voltage2,
+                            Voltage3: data.Last.Voltage3,
+                            CurrentElectricPower: data.Last.CurrentElectricPower,
+                            TotalWaterRate: data.Last.TotalWaterRate,
+                            WaterEnergy: data.Last.WaterEnergy,
+                            Errors: data.Last.Errors,
+                            Alarm: data.Last.Alarm,
+                            Presure: data.Last.Presure
+                        }
+                    } else {
+                        $scope.EWdata.last = getDefaultDataOblect();
+                    }
+                    
                     x.domain([$scope.EWdata.startDate, $scope.EWdata.endDate]);
                     y.domain([d3.min($scope.EWdata.dataGraph,function(d){return d.Value;})*0.95,d3.max($scope.EWdata.dataGraph,function(d){return d.Value;})*1.05]);  // d3.extent($scope.EWdata.dataGraph, function (d) { return d.Value; }));
                     
