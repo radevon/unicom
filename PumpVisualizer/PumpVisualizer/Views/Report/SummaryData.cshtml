@@ -52,13 +52,13 @@
                     @(item.RecvDate.HasValue ? item.RecvDate.Value.ToString("dd MMM yyyy HH:mm:ss") : "")
                 </td>
                 <td class="text-right">
-                    @(item.TotalEnergy.HasValue ? item.TotalEnergy.Value.ToString("f3") : "")
+                    @(item.TotalEnergy.HasValue ? (item.TotalEnergy.Value >= 0 ? item.TotalEnergy.Value.ToString("f3") : "нет связи") : "")
                 </td>
                 <td class="text-right">
-                    @(item.TotalWaterRate.HasValue ? item.TotalWaterRate.Value.ToString("f3") : "")
+                    @(item.TotalWaterRate.HasValue ? (item.TotalWaterRate.Value >= 0 ? item.TotalWaterRate.Value.ToString("f3") : "нет связи") : "")
                 </td>
                 <td class="text-right">
-                    @(item.Presure.HasValue ? item.Presure.Value.ToString("f3") : "")
+                    @(item.Presure.HasValue ? (item.Presure.Value >= 0 ? item.Presure.Value.ToString("f3") : "нет связи") : "")
                 </td>
             </tr>
         }
